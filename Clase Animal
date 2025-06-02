@@ -1,0 +1,35 @@
+#include <cstdio>
+#include <cstring>
+
+class Animal {
+private:
+    char nombre[50];
+    char raza[50];
+    int edad;
+    double peso;
+    char color[50];
+
+public:
+    Animal() {
+        strcpy(nombre, "Perro");
+        strcpy(raza, "Labrador");
+        edad = 3;
+        peso = 25.0;
+        strcpy(color, "Negro");
+    }
+
+    void mostrarDatos() {
+        printf("\n--- Caracteristicas del animal ---\n");
+        printf("Nombre: %s\n", nombre);
+        printf("Raza: %s\n", raza);
+        printf("Edad: %d years\n", edad);
+        printf("Peso: %.2f kg\n", peso);
+        printf("Color: %s\n", color);
+    }
+};
+
+int main() {
+    Animal miAnimal;
+    miAnimal.mostrarDatos();
+    return 0;
+}
