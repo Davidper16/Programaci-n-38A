@@ -1,0 +1,54 @@
+#include <cstdio>
+
+int main() {
+    int n;
+    printf("Ingrese la dimension de las matrices cuadradas (n x n): ");
+    scanf("%d", &n);
+
+    int** A = new int*[n];
+    int** B = new int*[n];
+    int** C = new int*[n];
+
+    for (int i = 0; i < n; ++i) {
+        A[i] = new int[n];
+        B[i] = new int[n];
+        C[i] = new int[n]();  
+    }
+
+    printf("\nIngrese los elementos de la matriz A:\n");
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < n; ++j) {
+            printf("A[%d][%d]: ", i, j);
+            scanf("%d", &A[i][j]);
+        }
+
+    printf("\nIngrese los elementos de la matriz B:\n");
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < n; ++j) {
+            printf("B[%d][%d]: ", i, j);
+            scanf("%d", &B[i][j]);
+        }
+
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < n; ++j)
+            for (int k = 0; k < n; ++k)
+                C[i][j] += A[i][k] * B[k][j];
+
+    printf("\nResultado de la multiplicacion (C = A x B):\n");
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j)
+            printf("%d\t", C[i][j]);
+        printf("\n");
+    }
+
+    for (int i = 0; i < n; ++i) {
+        delete[] A[i];
+        delete[] B[i];
+        delete[] C[i];
+    }
+    delete[] A;
+    delete[] B;
+    delete[] C;
+
+    return 0;
+}
