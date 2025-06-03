@@ -1,0 +1,103 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_ESTUDIANTES 100
+#define MAX_CURSOS 20
+
+struct Curso {
+    char titulo[40];
+    float nota1, nota2, nota3;
+    float promedio;
+    char estado[15];
+};
+
+struct Estudiante {
+    char nombreCompleto[60];
+    Curso cursos[MAX_CURSOS];
+    int cantidadCursos;
+    float promedioGeneral;
+};
+
+void limpiarEntrada() {
+    int ch;
+    while ((ch = getchar()) != '\n' && ch != EOF);
+}
+
+void registrarCurso(Curso* c) {
+    printf("Nombre del curso: ");
+    fgets(c->titulo, sizeof(c->titulo), stdin);
+    c->titulo[strcspn(c->titulo, "\n")] = 0;
+
+    printf("Nota 1: ");
+    scanf("%f", &c->nota1);
+    printf("Nota 2: ");
+    scanf("%f", &c->nota2);
+    printf("Nota 3: ");
+    scanf("%f", &c->nota3);
+    limpiarEntrada();
+
+    c->promedio = (c->nota1 + c->nota2 + c->nota3) / 3.0;
+
+    if (c->promedio >= 6.0)
+        strcpy(c->estado, "APROBADO");
+    else
+        strcpy(c->estado, "REPROBADO");
+}
+
+void mostrarReporte(Estudiante alumnos[], int total) {
+    float promedioTotal = 0.0;
+
+    printf("\n======== REPORTE DE ESTUDIANTES ========\n\n");
+    for (int i = 0; i < total; i++) {
+        printf("Estudiante: %s\n", alumnos[i].nombreCompleto);
+        printf("Curso\t\tPromedio\tEstado\n");
+
+        for (int j = 0; j < alumnos[i].cantidadCursos; j++) {
+            Curso c = alumnos[i].cursos[j];
+            printf("%-15s %.2f\t\t%s\n", c.titulo, c.promedio, c.estado);
+        }
+
+        printf("Promedio final: %.2f\n\n", alumnos[i].promedioGeneral);
+        promedioTotal += alumnos[i].promedioGeneral;
+    }
+
+    if (total > 0)
+        printf("Promedio general del grupo: %.2f\n", promedioTotal / total);
+}
+
+int main() {
+    Estudiante lista[MAX_ESTUDIANTES];
+    int totalEstudiantes = 0;
+    char opcionAlumno, opcionCurso;
+
+    do {
+        printf("\nNombre del estudiante: ");
+        fgets(lista[totalEstudiantes].nombreCompleto, sizeof(lista[totalEstudiantes].nombreCompleto), stdin);
+        lista[totalEstudiantes].nombreCompleto[strcspn(lista[totalEstudiantes].nombreCompleto, "\n")] = 0;
+
+        float acumulado = 0.0;
+        int totalCursos = 0;
+
+        do {
+            registrarCurso(&lista[totalEstudiantes].cursos[totalCursos]);
+            acumulado += lista[totalEstudiantes].cursos[totalCursos].promedio;
+            totalCursos++;
+
+            printf("¿Agregar otro curso? (s/n): ");
+            scanf(" %c", &opcionCurso);
+            limpiarEntrada();
+        } while ((opcionCurso == 's' || opcionCurso == 'S') && totalCursos < MAX_CURSOS);
+
+        lista[totalEstudiantes].cantidadCursos = totalCursos;
+        lista[totalEstudiantes].promedioGeneral = acumulado / totalCursos;
+        totalEstudiantes++;
+
+        printf("¿Agregar otro estudiante? (s/n): ");
+        scanf(" %c", &opcionAlumno);
+        limpiarEntrada();
+
+    } while ((opcionAlumno == 's' || opcionAlumno == 'S') && totalEstudiantes < MAX_ESTUDIANTES);
+
+    mostrarReporte(lista, totalEstudiantes);
+    return 0;
+}
